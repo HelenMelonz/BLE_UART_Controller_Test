@@ -1,7 +1,7 @@
 // BLE Controller Test
 // Example of parsing Controller/Sensor data received from Bluefruit LE Connect app
 // Requires Bluefruit LE hardware & Adafruit_BLE_UART library
-//
+// Taken over by Helen 
 
 #include <SPI.h>
 #include "Adafruit_BLE_UART.h"
