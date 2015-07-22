@@ -1,16 +1,19 @@
 // BLE Controller Test
 // Example of parsing Controller/Sensor data received from Bluefruit LE Connect app
 // Requires Bluefruit LE hardware & Adafruit_BLE_UART library
-// Taken over by Helen 
-
+//
+#include <Wire.h>
 #include <SPI.h>
-#include "Adafruit_BLE_UART.h"
+#include <Adafruit_BLE_UART.h>
+#include <Adafruit_NeoPixel.h>
 
 #define ADAFRUITBLE_REQ 10
 #define ADAFRUITBLE_RST 9
 #define ADAFRUITBLE_RDY 2
 
 Adafruit_BLE_UART uart = Adafruit_BLE_UART(ADAFRUITBLE_REQ, ADAFRUITBLE_RDY, ADAFRUITBLE_RST);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(1, 6, NEO_GRB + NEO_KHZ800);
+
 
 unsigned long time = 0l;
 boolean connection = false;
@@ -111,9 +114,17 @@ void rxCallback(uint8_t *buffer, uint8_t len)
 /**************************************************************************/
 void setup(void)
 { 
+  while (!Serial);
+  delay(500);
+  
   Serial.begin(9600);
   Serial.println(F("Arduino setup"));
-
+  
+  strip.begin();
+  strip.show();
+  strip.setPixelColor(0, strip.Color(0, 0, 7)); // 
+  strip.show();
+  
   uart.setRXcallback(rxCallback);
   uart.setACIcallback(aciCallback);
   uart.begin();
@@ -178,8 +189,11 @@ void printColorData(uint8_t *buffer) {
 
   byte b = *(buffer + 4);
   Serial.print("b = ");
-  Serial.println(b, DEC); 
-
+  Serial.println(b, DEC);
+ 
+  strip.setPixelColor(0, strip.Color(r, g, b)); // 
+  strip.show();
+    
 }
 
 
@@ -243,5 +257,4 @@ void printButtonState(char buttonState) {
     Serial.println("unknown state");
   }
 }
-
 
